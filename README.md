@@ -1,20 +1,26 @@
 # QuietPod Nap Rentals API
 
-A simple Express API for a noise-canceling nap pod rental business. Students and workers rent a pod by the hour to get real rest between classes or shifts.
+Ever been so exhausted at school or work that you just needed 20 minutes of actual quiet? That's the problem QuietPod solves. This is a small backend API for a business that rents out noise-canceling nap pods by the hour — think phone-booth-sized rooms with a bed, blackout walls, and a soft alarm to wake you up on time.
 
-## Running it
+This API is what would sit behind a mobile app for the business. It doesn't have a database yet — everything below is realistic placeholder data — but it's built the way a real backend would be: separate, clearly named routes for each piece of information the app would need.
 
-```
-npm install
-node server.js
-```
+## How to run it
 
-Server runs at `http://localhost:3000`
+1. Make sure you have Node.js installed.
+2. Open a terminal in this folder and run:
+   ```
+   npm install
+   node server.js
+   ```
+3. You should see: `QuietPod API running at http://localhost:3000`
+4. Open your browser and visit any of the routes below.
 
-## Endpoints
+If you visit `http://localhost:3000/` by itself, you'll just get a welcome message pointing you to the real routes — that's normal, not an error.
 
-### `GET /business-info`
-Basic info about the business.
+## What each route gives you
+
+### `/business-info`
+The basics about the company — name, tagline, how many locations, hours, and contact info. Good for an "About" screen in an app.
 ```json
 {
   "name": "QuietPod Nap Rentals",
@@ -25,8 +31,8 @@ Basic info about the business.
 }
 ```
 
-### `GET /pods`
-List of every pod unit, its location, current status, and hourly rate.
+### `/pods`
+Every individual pod the business owns, where it's located, whether it's free or occupied right now, and what it costs per hour. This is the list an app would show when someone's trying to find a pod to book.
 ```json
 [
   { "id": 1, "location": "Main Library - 2nd Floor", "status": "available", "hourlyRate": 5 },
@@ -34,8 +40,8 @@ List of every pod unit, its location, current status, and hourly rate.
 ]
 ```
 
-### `GET /amenities`
-List of what's included with every pod rental.
+### `/amenities`
+What you actually get inside a pod when you rent one. Simple list, easy to display as bullet points in an app.
 ```json
 [
   "Active noise-canceling walls",
@@ -44,8 +50,8 @@ List of what's included with every pod rental.
 ]
 ```
 
-### `GET /pricing`
-Pricing broken into categories: hourly, daily pass, and membership tiers.
+### `/pricing`
+This is the one with more structure to it, since nap pods aren't priced just one way. You can pay by the hour, grab a day pass, or get a membership — and memberships themselves split into monthly or semester options. That's why this data is "nested" instead of a flat list.
 ```json
 {
   "hourly": { "rate": 5, "minMinutes": 30 },
@@ -57,11 +63,15 @@ Pricing broken into categories: hourly, daily pass, and membership tiers.
 }
 ```
 
-### `GET /availability`
-Pod availability broken down by location.
+### `/availability`
+A quick snapshot of how many pods are free at each location right now, without having to scroll through the full `/pods` list.
 ```json
 {
   "Main Library - 2nd Floor": { "totalPods": 2, "available": 1 },
   "Student Union": { "totalPods": 1, "available": 1 }
 }
 ```
+
+## Why it's built this way
+
+Each route only returns one type of thing and has a name that says exactly what it does — no `/data1` or `/page2` guessing games. Three different data shapes are covered on purpose: a flat object (`/business-info`), plain arrays (`/pods`, `/amenities`), and nested objects (`/pricing`, `/availability`) — the same mix of shapes a real mobile app would need to pull from a real backend.
